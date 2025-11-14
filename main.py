@@ -25,11 +25,18 @@ while menu_is_over == False:
     clock.tick(60) #limit FPS to 60
     pygame.display.update()
 
-#Force Field and P1's ship
+#Force Field
 field = force_field(1, (178, 34, 34), (640, 0, 10, 720))
-p1 = character(100, 10, 7, 400, 300, 40, 40)
+
+# P1's ship
+p1 = character(100, 10, 7, 280, 670, 40, 40)
 p1.sprites = p1.load_spritesheet('assets/p1/Move.png', 90, (64, 64), 192, 192)
 
+# P2's ship
+p2 = character(100, 10, 7, 950, 665, 40, 40)
+p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
+
+# HP Icon
 HP_Icon = pygame.image.load('assets/p1/HP_Icon.png')
 HP_Icon = pygame.transform.scale(HP_Icon, (32, 32))
 HP_Font = pygame.font.Font(None, 32)
@@ -44,7 +51,10 @@ while True:
             pygame.quit()
             sys.exit()
     screen.blit(p1.sprites[p1.status], (p1.x, p1.y))
+    screen.blit(p2.sprites[p2.status], (p2.x, p2.y))
     keys_p1 = pygame.key.get_pressed()
+    keys_p2 = pygame.key.get_pressed()
+    # KEYS P1
     if keys_p1[pygame.K_w] and p1.y > 0:
         p1.y -= p1.velocity
         p1.status = 2
@@ -58,13 +68,27 @@ while True:
         p1.x += p1.velocity
         p1.status = 5
     
+    # KEYS P2
+    if keys_p2[pygame.K_UP] and p2.y > 0:
+        p2.y -= p2.velocity
+        p2.status = 2
+    if keys_p2[pygame.K_LEFT] and p2.x > 0:
+        p2.x -= p1.velocity
+        p2.status = 3
+    if keys_p2[pygame.K_DOWN] and p2.y < 665:
+        p2.y += p1.velocity
+        p2.status = 4
+    if keys_p2[pygame.K_RIGHT] and p2.x < 1235:
+        p2.x += p2.velocity
+        p2.status = 5
+
     p1.rect.topleft = (p1.x, p1.y)
     if p1.rect.colliderect(field.rect):
         p1.lose_health(field.damage)
     
     HP_Text = HP_Font.render(str(p1.HP), True, (75, 0, 130))
-    HP_Text_rect = HP_Text.get_rect(center = (HP_Icon.get_width() // 2, (HP_Icon.get_height() + 680)))
-    screen.blit(HP_Icon, (0, 680))
+    HP_Text_rect = HP_Text.get_rect(center = (16, 680))
+    screen.blit(HP_Icon, (0, 690))
     screen.blit(HP_Text, HP_Text_rect)
     clock.tick(60) #limit FPS to 60
     pygame.display.update()
