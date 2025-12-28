@@ -13,15 +13,7 @@ menu_is_over = False
 #Menu loop
 while menu_is_over == False:
     mouse_pos = pygame.mouse.get_pos()
-    display_main_menu(screen, mouse_pos)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            menu_is_over = True
-            
+    menu_is_over = display_main_menu(screen, mouse_pos)
     clock.tick(60) #limit FPS to 60
     pygame.display.update()
 

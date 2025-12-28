@@ -1,7 +1,9 @@
-import pygame
+import pygame, sys
 from get_font import get_font  
+from info_button import display_info_image
 
 def display_main_menu(screen, mouse_pos):
+    global info_anim
     #backround image
     img_menu = pygame.image.load('assets/main_menu.png')
     screen.blit(img_menu, (0, 0))
@@ -22,10 +24,17 @@ def display_main_menu(screen, mouse_pos):
         menu_exit_text = get_font(60).render("EXIT", True, "#BA55D3")
     screen.blit(menu_exit_text, menu_exit_rect)
     #info image
-    img_info = pygame.image.load('assets/info.png')
-    img_info = pygame.transform.scale(img_info, (img_info.get_width()*0.15, img_info.get_height()*0.15))
-    info_rect = img_info.get_rect(center= (1280-img_info.get_width()/2-20, 720-img_info.get_height()/2-20))
-    if(info_rect.collidepoint(mouse_pos)):
-        img_info = pygame.image.load('assets/info_changed.png')
-        img_info = pygame.transform.scale(img_info, (img_info.get_width()*0.15, img_info.get_height()*0.15))
-    screen.blit(img_info, info_rect)
+    display_info_image(screen, mouse_pos)
+    #verify events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if(menu_start_rect.collidepoint(mouse_pos)):  #start button pressed
+                return True
+            if(menu_exit_rect.collidepoint(mouse_pos)):  #exit button pressed
+                pygame.quit()
+                sys.exit()
+    return False
+            
