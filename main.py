@@ -18,20 +18,25 @@ while menu_is_over == False:
     pygame.display.update()
 
 #Force Field
-field = force_field(1, (178, 34, 34), (640, 0, 10, 720))
+field = force_field(4, (178, 34, 34), (640, 0, 10, 720))
 
 # P1's ship
-p1 = character(100, 10, 7, 280, 670, 40, 40)
+p1 = character(100, 10, 7, 280, 665, 40, 40)
 p1.sprites = p1.load_spritesheet('assets/p1/Move.png', 90, (64, 64), 192, 192)
 
 # P2's ship
 p2 = character(100, 10, 7, 950, 665, 40, 40)
 p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
 
-# HP Icon
-HP_Icon = pygame.image.load('assets/p1/HP_Icon.png')
-HP_Icon = pygame.transform.scale(HP_Icon, (32, 32))
-HP_Font = pygame.font.Font(None, 32)
+# HP1 Icon
+HP1_Icon = pygame.image.load('assets/p1/HP_Icon.png')
+HP1_Icon = pygame.transform.scale(HP1_Icon, (32, 32))
+HP1_Font = pygame.font.Font(None, 32)
+
+# HP2 Icon
+HP2_Icon = pygame.image.load('assets/p2/HP_Icon.png')
+HP2_Icon = pygame.transform.scale(HP2_Icon, (32, 32))
+HP2_Font = pygame.font.Font(None, 32)
 
 #Game loop
 while True:
@@ -53,10 +58,10 @@ while True:
     if keys_p1[pygame.K_a] and p1.x > 0:
         p1.x -= p1.velocity
         p1.status = 3
-    if keys_p1[pygame.K_s] and p1.y < 670:
+    if keys_p1[pygame.K_s] and p1.y < 700 - p1.height:
         p1.y += p1.velocity
         p1.status = 4
-    if keys_p1[pygame.K_d] and p1.x < 610:
+    if keys_p1[pygame.K_d] and p1.x < 605:
         p1.x += p1.velocity
         p1.status = 5
     
@@ -64,13 +69,13 @@ while True:
     if keys_p2[pygame.K_UP] and p2.y > 0:
         p2.y -= p2.velocity
         p2.status = 2
-    if keys_p2[pygame.K_LEFT] and p2.x > 0:
+    if keys_p2[pygame.K_LEFT] and p2.x > 615:
         p2.x -= p1.velocity
         p2.status = 3
-    if keys_p2[pygame.K_DOWN] and p2.y < 665:
+    if keys_p2[pygame.K_DOWN] and p2.y < 700 - p2.height:
         p2.y += p1.velocity
         p2.status = 4
-    if keys_p2[pygame.K_RIGHT] and p2.x < 1235:
+    if keys_p2[pygame.K_RIGHT] and p2.x < 1270 - p2.width:
         p2.x += p2.velocity
         p2.status = 5
 
@@ -78,9 +83,18 @@ while True:
     if p1.rect.colliderect(field.rect):
         p1.lose_health(field.damage)
     
-    HP_Text = HP_Font.render(str(p1.HP), True, (75, 0, 130))
-    HP_Text_rect = HP_Text.get_rect(center = (16, 680))
-    screen.blit(HP_Icon, (0, 690))
-    screen.blit(HP_Text, HP_Text_rect)
+    p2.rect.topleft = (p2.x, p2.y)
+    if p2.rect.colliderect(field.rect):
+        p2.lose_health(field.damage)
+    
+    HP1_Text = HP1_Font.render(str(p1.HP), True, (75, 0, 130))
+    HP1_Text_rect = HP1_Text.get_rect(center = (16, 680))
+    screen.blit(HP1_Icon, (0, 690))
+    screen.blit(HP1_Text, HP1_Text_rect)
+    
+    HP2_Text = HP2_Font.render(str(p2.HP), True, (75, 0, 130))
+    HP2_Text_rect = HP2_Text.get_rect(center = (1262, 680))
+    screen.blit(HP2_Icon, (1280 - 32, 690))
+    screen.blit(HP2_Text, HP2_Text_rect)
     clock.tick(60) #limit FPS to 60
     pygame.display.update()
