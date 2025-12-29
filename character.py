@@ -43,7 +43,7 @@ class character:
     def shoot(self, color):
         if self.shoot_cooldown == 0:
             self.bullets.append(
-                Bullet(self.x + self.width//2 + 10, self.y, -14, 100, color)
+                Bullet(self.x + self.width//2 + 10, self.y, -14, self.damage, color)
             )
             self.shoot_cooldown = 15
     
