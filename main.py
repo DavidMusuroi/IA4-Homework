@@ -3,6 +3,7 @@ from menu import display_main_menu
 from get_font import get_font
 from force_field import force_field
 from character import character
+from bullet import Bullet
 
 pygame.init()
 
@@ -18,7 +19,7 @@ while menu_is_over == False:
     pygame.display.update()
 
 #Force Field
-field = force_field(4, (178, 34, 34), (640, 0, 10, 720))
+field = force_field(10, (178, 34, 34), (640, 0, 10, 720))
 
 # P1's ship
 p1 = character(100, 10, 7, 280, 665, 40, 40)
@@ -49,6 +50,7 @@ while True:
             sys.exit()
     screen.blit(p1.sprites[p1.status], (p1.x, p1.y))
     screen.blit(p2.sprites[p2.status], (p2.x, p2.y))
+
     keys_p1 = pygame.key.get_pressed()
     keys_p2 = pygame.key.get_pressed()
     # KEYS P1
@@ -79,22 +81,49 @@ while True:
         p2.x += p2.velocity
         p2.status = 5
 
+    #check for shoot
+    if keys_p1[pygame.K_f]:
+        p1.shoot((255,80,80))
+
+    if keys_p2[pygame.K_SPACE]:
+        p2.shoot((0,255,255))
+
+    #update rect for p1 & p2
     p1.rect.topleft = (p1.x, p1.y)
-    if p1.rect.colliderect(field.rect):
-        p1.lose_health(field.damage)
-    
     p2.rect.topleft = (p2.x, p2.y)
+
+    #///TO DO -> ADD ENEMIES IN p1.enemies and p2.enemies if the list is empty///
+    #if(not p1.enemies):
+        #...
+        #create enemy as a new instance of character (maybe at random coords)
+        #add it to the list
+        
+    #if(not p2.enemies):
+        #...
+
+    #display bullets and check for hits
+    p1.check_hits()
+    p2.check_hits()
+    p1.update_bullets(screen)
+    p2.update_bullets(screen)
+
+    #colision with the field
+    if p1.rect.colliderect(field.rect):
+        p1.lose_health_by_field(field.damage)
     if p2.rect.colliderect(field.rect):
-        p2.lose_health(field.damage)
+        p2.lose_health_by_field(field.damage)
     
+    #display hp for p1
     HP1_Text = HP1_Font.render(str(p1.HP), True, (75, 0, 130))
     HP1_Text_rect = HP1_Text.get_rect(center = (16, 680))
     screen.blit(HP1_Icon, (0, 690))
     screen.blit(HP1_Text, HP1_Text_rect)
     
+    #display hp for p2
     HP2_Text = HP2_Font.render(str(p2.HP), True, (75, 0, 130))
     HP2_Text_rect = HP2_Text.get_rect(center = (1262, 680))
     screen.blit(HP2_Icon, (1280 - 32, 690))
     screen.blit(HP2_Text, HP2_Text_rect)
+
     clock.tick(60) #limit FPS to 60
     pygame.display.update()

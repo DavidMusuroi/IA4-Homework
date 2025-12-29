@@ -1,5 +1,6 @@
 import pygame
 import time
+from bullet import Bullet
 
 class character:
     def __init__(self, HP, damage, velocity, x, y, width, height):
@@ -13,6 +14,9 @@ class character:
         self.status = 1 #Default
         self.last_time_hit = 0
         self.rect = pygame.Rect(x, y, width, height)
+        self.bullets = [] #bullet list
+        self.shoot_cooldown = 0
+        self.enemies = [] #list of enemies
 
     def load_spritesheet(self, filename, rot_angle, scale, width, height):
         spritesheet = pygame.image.load(filename)
@@ -27,9 +31,37 @@ class character:
             sprites.append(frame)
         return sprites
 
-    def lose_health(self, nr):
+    def lose_health_by_field(self, nr):
         sec = time.time()
         if sec - self.last_time_hit >= 1:
             self.HP -= nr
             self.last_time_hit = sec
+
+    def lose_health(self, nr):
+        self.HP -= nr
+
+    def shoot(self, color):
+        if self.shoot_cooldown == 0:
+            self.bullets.append(
+                Bullet(self.x + self.width//2 + 10, self.y, -14, 100, color)
+            )
+            self.shoot_cooldown = 15
     
+    def update_bullets(self, screen):
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+
+        for bullet in self.bullets[:]:
+            bullet.update()
+            bullet.draw(screen)
+
+            if bullet.off_screen():
+                self.bullets.remove(bullet)
+
+    def check_hits(self):
+        for bullet in self.bullets[:]:
+            for enemy in self.enemies:
+                if bullet.rect.colliderect(enemy.rect):
+                    enemy.lose_health(bullet.damage)
+                    self.bullets.remove(bullet)
+                    break
