@@ -11,7 +11,7 @@ def display_info_image(screen, mouse_pos):
         img_info = pygame.image.load('assets/info_changed.png')
         img_info = pygame.transform.scale(img_info, (img_info.get_width()*0.15, img_info.get_height()*0.15))
         #animation
-        info_anim += 1
+        info_anim += 0.25
         if info_anim > 1:
             info_anim = 1
     else:

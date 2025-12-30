@@ -4,6 +4,7 @@ from get_font import get_font
 from force_field import force_field
 from character import character
 from bullet import Bullet
+from wave import check_for_enemies, load_enemies
 
 pygame.init()
 
@@ -32,21 +33,6 @@ p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
 # Current wave
 wave_nr = 1
 
-# Enemies 1 and 2 of player 1
-e1_p1 = character(30, 5, 1, 400, 400, 60, 40)
-e1_p1.sprite = pygame.image.load('assets/enemies/Ship1.png').convert_alpha()
-e2_p1 = character(55, 8, 2, 500, 500, 70, 55)
-e2_p1.sprite = pygame.image.load('assets/enemies/Ship2.png').convert_alpha()
-# Resize hitbox
-e2_p1.rect = pygame.Rect(e2_p1.x + 25, e2_p1.y, e2_p1.width, e2_p1.height)
-# Enemies 1 and 2 of player 2
-e1_p2 = character(30, 2, 1, 1000, 500, 60, 45)
-e1_p2.sprite = pygame.image.load('assets/enemies/Ship1.png').convert_alpha()
-e2_p2 = character(55, 8, 2, 1000, 600, 70, 55)
-e2_p2.sprite = pygame.image.load('assets/enemies/Ship2.png').convert_alpha()
-# Resize hitbox
-e2_p2.rect = pygame.Rect(e2_p2.x + 25, e2_p2.y, e2_p2.width, e2_p2.height)
-
 # HP1 Icon
 HP1_Icon = pygame.image.load('assets/p1/HP_Icon.png')
 HP1_Icon = pygame.transform.scale(HP1_Icon, (32, 32))
@@ -68,46 +54,20 @@ while True:
             sys.exit()
     screen.blit(p1.sprites[p1.status], (p1.x, p1.y))
     screen.blit(p2.sprites[p2.status], (p2.x, p2.y))
-    # Start Wave 1
-    if wave_nr == 1 and not p1.enemies and not p2.enemies:
-        p1.enemies.append(e1_p1)
-        p2.enemies.append(e1_p2)
-        p1.enemies.append(e2_p1)
-        p2.enemies.append(e2_p2)
-        screen.blit(e1_p1.sprite, (e1_p1.x, e1_p1.y))
-        screen.blit(e1_p2.sprite, (e1_p2.x, e1_p2.y))
-        screen.blit(e2_p1.sprite, (e2_p1.x, e2_p1.y))
-        screen.blit(e2_p2.sprite, (e2_p2.x, e2_p2.y))
-    # Check if we have enemies remaining
-    elif len(p1.enemies) != 0 or len(p2.enemies) != 0:
-        okay = False
-        for enemy in p1.enemies[:]:
-            if enemy.HP > 0:
-                okay = True
-                screen.blit(enemy.sprite, (enemy.x, enemy.y))
-            else:
-                p1.enemies.remove(enemy)
-        for enemy in p2.enemies[:]:
-            if enemy.HP > 0:
-                okay = True
-                screen.blit(enemy.sprite, (enemy.x, enemy.y))
-            else:
-                p2.enemies.remove(enemy)
-        if okay == False:
+
+    #Load enemies for wave 1, 2, 3
+    if not p1.enemies and not p2.enemies:
+        load_enemies(wave_nr,p1,p2,screen)
+    #Verify if any wave finished to move to the next one
+    if wave_nr < 4:
+        enemies_alive = check_for_enemies(p1, p2, screen)
+        if not enemies_alive:
             wave_nr += 1
-    # Advance to wave 2 if no enemies remain
-    elif wave_nr == 2 and not p1.enemies and not p2.enemies:
-        wave_nr += 1
-        # TODO : insert enemies
-    # Advance to wave 3 if no enemies remain
-    elif wave_nr == 3 and not p1.enemies and not p2.enemies:
-        wave_nr += 1
-        # TODO : insert enemies
-    # You win!
+    #WIN TODO : Game WIN Screen
     elif wave_nr == 4 and not p1.enemies and not p2.enemies:
-        k = "GG"
-        # TODO : Win Screen
-    
+        print("GG")
+        pygame.quit()
+        sys.exit()
 
     keys_p1 = pygame.key.get_pressed()
     keys_p2 = pygame.key.get_pressed()
@@ -150,15 +110,6 @@ while True:
     p1.rect.topleft = (p1.x, p1.y)
     p2.rect.topleft = (p2.x, p2.y)
 
-    #TODO -> ADD ENEMIES IN p1.enemies and p2.enemies if the list is empty
-    #if(not p1.enemies):
-        #...
-        #create enemy as a new instance of character (maybe at random coords)
-        #add it to the list
-        
-    #if(not p2.enemies):
-        #...
-
     #display bullets and check for hits
     p1.check_hits()
     p2.check_hits()
@@ -185,9 +136,9 @@ while True:
 
     # TODO : Game Over Screen
     if p1.HP <= 0 or p2.HP <= 0:
+        print("GAME OVER")
         pygame.quit()
         sys.exit()
-        print("GAME OVER")
 
     clock.tick(60) #limit FPS to 60
     pygame.display.update()
