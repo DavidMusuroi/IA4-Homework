@@ -33,7 +33,7 @@ while True:
     # P2's ship
     p2 = character(100, 10, 7, 950, 610, 40, 40)
     p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
-    #p2.HP = 12 <-uncomment for faster lose test
+
     print(p1.height)
     print(p2.height)
     # Current wave
@@ -53,7 +53,7 @@ while True:
     # 1 -> win
     # 2 -> lose
     Game_over = 0
-
+    start_time = pygame.time.get_ticks()
     #Game loop
     while not Game_over:
         img_menu = pygame.image.load('assets/main_menu.png')
@@ -138,7 +138,7 @@ while True:
         #display info bar  
         HUD_HEIGHT = 50
         hud_surface = pygame.Surface((1280, HUD_HEIGHT), pygame.SRCALPHA)
-        hud_surface.fill((120, 0, 180, 200))   # mov cu alpha (0–255)
+        hud_surface.fill((82, 64, 182, 200))   # mov cu alpha (0–255)
         screen.blit(hud_surface, (0, 720 - HUD_HEIGHT))
         HUD_HEIGHT2 = 10
         hud_surface2 = pygame.Surface((1280, HUD_HEIGHT2), pygame.SRCALPHA)
@@ -146,16 +146,31 @@ while True:
         screen.blit(hud_surface2, (0, 720 - 40 - HUD_HEIGHT2))
 
         #display hp for p1
-        HP1_Text = HP1_Font.render(str(p1.HP), True, (0, 180, 0))
+        HP1_Text = get_font(16).render(str(p1.HP), True, (0, 180, 0))
         HP1_Text_rect = HP1_Text.get_rect(center = (55, 700))
         screen.blit(HP1_Icon, (3, 685))
         screen.blit(HP1_Text, HP1_Text_rect)
         
         #display hp for p2
-        HP2_Text = HP2_Font.render(str(p2.HP), True, (0, 180, 0))
+        HP2_Text = get_font(16).render(str(p2.HP), True, (0, 180, 0))
         HP2_Text_rect = HP2_Text.get_rect(center = (1220, 700))
         screen.blit(HP2_Icon, (1280 - 35, 685))
         screen.blit(HP2_Text, HP2_Text_rect)
+
+        #display box for time
+        timer_height = 50
+        timer_weight = 100
+        timer_surface = pygame.Surface((timer_weight, timer_height), pygame.SRCALPHA)
+        timer_surface.fill((200, 200, 200, 170))
+        screen.blit(timer_surface, (1280-timer_weight-20, 20))
+        #display time
+        elapsed_seconds = (pygame.time.get_ticks() - start_time)//1000
+        minutes = elapsed_seconds // 60
+        seconds = elapsed_seconds % 60
+        time_text = f"{minutes:02}:{seconds:02}"
+        time_render = get_font(16).render(time_text, True, "#5240b6")
+        text_rect = time_render.get_rect(center=(1280 - timer_weight + 32, timer_height-2))
+        screen.blit(time_render, text_rect)
 
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
