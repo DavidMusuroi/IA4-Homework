@@ -24,16 +24,18 @@ while True:
         pygame.display.update()
 
     #Force Field
-    field = force_field(4, (178, 34, 34), (640, 0, 10, 720))
+    field = force_field(4, (178, 34, 34), (640, 0, 10, 670))
 
     # P1's ship
-    p1 = character(100, 10, 7, 280, 665, 40, 40)
+    p1 = character(100, 10, 7, 280, 610, 40, 40)
     p1.sprites = p1.load_spritesheet('assets/p1/Move.png', 90, (64, 64), 192, 192)
 
     # P2's ship
-    p2 = character(100, 10, 7, 950, 665, 40, 40)
+    p2 = character(100, 10, 7, 950, 610, 40, 40)
     p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
-    p2.HP = 12
+    #p2.HP = 12 <-uncomment for faster lose test
+    print(p1.height)
+    print(p2.height)
     # Current wave
     wave_nr = 1
 
@@ -72,10 +74,13 @@ while True:
             enemies_alive = check_for_enemies(p1, p2, screen)
             if not enemies_alive:
                 wave_nr += 1
-        #WIN TODO : Game WIN Screen
+        #WIN
         elif wave_nr == 4 and not p1.enemies and not p2.enemies:
-            print("GG")
             Game_over = 1
+        
+        #LOSE
+        if p1.HP <= 0 or p2.HP <= 0:
+            Game_over = 2
 
         keys_p1 = pygame.key.get_pressed()
         keys_p2 = pygame.key.get_pressed()
@@ -86,7 +91,7 @@ while True:
         if keys_p1[pygame.K_a] and p1.x > 0:
             p1.x -= p1.velocity
             p1.status = 3
-        if keys_p1[pygame.K_s] and p1.y < 700 - p1.height:
+        if keys_p1[pygame.K_s] and p1.y < 650 - p1.height:
             p1.y += p1.velocity
             p1.status = 4
         if keys_p1[pygame.K_d] and p1.x < 605:
@@ -100,7 +105,7 @@ while True:
         if keys_p2[pygame.K_LEFT] and p2.x > 615:
             p2.x -= p1.velocity
             p2.status = 3
-        if keys_p2[pygame.K_DOWN] and p2.y < 700 - p2.height:
+        if keys_p2[pygame.K_DOWN] and p2.y < 650 - p2.height:
             p2.y += p1.velocity
             p2.status = 4
         if keys_p2[pygame.K_RIGHT] and p2.x < 1270 - p2.width:
@@ -130,22 +135,27 @@ while True:
         if p2.rect.colliderect(field.rect):
             p2.lose_health_by_field(field.damage)
         
+        #display info bar  
+        HUD_HEIGHT = 50
+        hud_surface = pygame.Surface((1280, HUD_HEIGHT), pygame.SRCALPHA)
+        hud_surface.fill((120, 0, 180, 200))   # mov cu alpha (0–255)
+        screen.blit(hud_surface, (0, 720 - HUD_HEIGHT))
+        HUD_HEIGHT2 = 10
+        hud_surface2 = pygame.Surface((1280, HUD_HEIGHT2), pygame.SRCALPHA)
+        hud_surface2.fill((255, 255, 255, 200))   # mov cu alpha (0–255)
+        screen.blit(hud_surface2, (0, 720 - 40 - HUD_HEIGHT2))
+
         #display hp for p1
-        HP1_Text = HP1_Font.render(str(p1.HP), True, (75, 0, 130))
-        HP1_Text_rect = HP1_Text.get_rect(center = (16, 680))
-        screen.blit(HP1_Icon, (0, 690))
+        HP1_Text = HP1_Font.render(str(p1.HP), True, (0, 180, 0))
+        HP1_Text_rect = HP1_Text.get_rect(center = (55, 700))
+        screen.blit(HP1_Icon, (3, 685))
         screen.blit(HP1_Text, HP1_Text_rect)
         
         #display hp for p2
-        HP2_Text = HP2_Font.render(str(p2.HP), True, (75, 0, 130))
-        HP2_Text_rect = HP2_Text.get_rect(center = (1262, 680))
-        screen.blit(HP2_Icon, (1280 - 32, 690))
+        HP2_Text = HP2_Font.render(str(p2.HP), True, (0, 180, 0))
+        HP2_Text_rect = HP2_Text.get_rect(center = (1220, 700))
+        screen.blit(HP2_Icon, (1280 - 35, 685))
         screen.blit(HP2_Text, HP2_Text_rect)
-
-        # TODO : Game Over Screen
-        if p1.HP <= 0 or p2.HP <= 0:
-            print("GAME OVER - You lost")
-            Game_over = 2
 
         clock.tick(60) #limit FPS to 60
         pygame.display.update()

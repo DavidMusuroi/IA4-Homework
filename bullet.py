@@ -19,4 +19,4 @@ class Bullet:
         pygame.draw.rect(screen, self.color, self.rect)
 
     def off_screen(self):
-        return self.y < 0 or self.y > 720
+        return self.y < 0 or self.y > 670

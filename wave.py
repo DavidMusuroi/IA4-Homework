@@ -25,14 +25,16 @@ def load_enemies(wave_nr,p1,p2,screen):
         # Enemies 1 and 2 of player 1
         e1_p1 = character(30, 5, 1, 400, 400, 60, 40)
         e1_p1.sprite = pygame.image.load('assets/enemies/Ship1.png').convert_alpha()
+        e1_p1.sprite = pygame.transform.rotate(e1_p1.sprite, -90)
         e2_p1 = character(55, 8, 2, 500, 500, 70, 55)
         e2_p1.sprite = pygame.image.load('assets/enemies/Ship2.png').convert_alpha()
+        e2_p1.sprite = pygame.transform.rotate(e2_p1.sprite, -90)
         # Resize hitbox
         e2_p1.rect = pygame.Rect(e2_p1.x + 25, e2_p1.y, e2_p1.width, e2_p1.height)
         # Enemies 1 and 2 of player 2
         e1_p2 = character(30, 2, 1, 1000, 500, 60, 45)
         e1_p2.sprite = pygame.image.load('assets/enemies/Ship1.png').convert_alpha()
-        e2_p2 = character(55, 8, 2, 1000, 600, 70, 55)
+        e2_p2 = character(55, 8, 2, 1000, 400, 70, 55)
         e2_p2.sprite = pygame.image.load('assets/enemies/Ship2.png').convert_alpha()
         # Resize hitbox
         e2_p2.rect = pygame.Rect(e2_p2.x + 25, e2_p2.y, e2_p2.width, e2_p2.height)
