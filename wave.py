@@ -1,5 +1,6 @@
 import pygame
 from character import character
+from get_font import get_font
 
 def check_for_enemies(p1,p2,screen):
     if len(p1.enemies) != 0 or len(p2.enemies) != 0:
@@ -54,4 +55,18 @@ def load_enemies(wave_nr,p1,p2,screen):
         e2_p2.sprite = pygame.image.load('assets/enemies/Ship2.png').convert_alpha()
         p2.enemies.append(e2_p2)
         # TODO ...
-    
+
+def draw_wave_text(screen, wave_nr, wave_text_time):
+    if wave_text_time>=900:
+        font = get_font(100)
+    else:
+        font = get_font(wave_text_time * 100 //800)
+
+    if wave_nr == 3:
+        text = "FINAL BOSS"
+    else:
+        text = f"WAVE {wave_nr}"
+
+    surf = font.render(text, True, (255, 80, 80))
+    rect = surf.get_rect(center=(640, 320))
+    screen.blit(surf, rect)

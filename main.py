@@ -1,11 +1,12 @@
 import pygame, sys
 from menu import display_main_menu
 from end_game import display_end_screen
+from timer import display_timer
 from get_font import get_font
 from force_field import force_field
 from character import character
 from bullet import Bullet
-from wave import check_for_enemies, load_enemies
+from wave import check_for_enemies, load_enemies, draw_wave_text
 
 pygame.init()
 
@@ -34,10 +35,8 @@ while True:
     p2 = character(100, 10, 7, 950, 610, 40, 40)
     p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
 
-    print(p1.height)
-    print(p2.height)
     # Current wave
-    wave_nr = 1
+    wave_nr = 2
 
     # HP1 Icon
     HP1_Icon = pygame.image.load('assets/p1/HP_Icon.png')
@@ -54,6 +53,8 @@ while True:
     # 2 -> lose
     Game_over = 0
     start_time = pygame.time.get_ticks()
+    wave_text_start = pygame.time.get_ticks()
+    show_wave_text = True
     #Game loop
     while not Game_over:
         img_menu = pygame.image.load('assets/main_menu.png')
@@ -66,17 +67,26 @@ while True:
         screen.blit(p1.sprites[p1.status], (p1.x, p1.y))
         screen.blit(p2.sprites[p2.status], (p2.x, p2.y))
 
-        #Load enemies for wave 1, 2, 3
-        if not p1.enemies and not p2.enemies:
-            load_enemies(wave_nr,p1,p2,screen)
-        #Verify if any wave finished to move to the next one
-        if wave_nr < 4:
-            enemies_alive = check_for_enemies(p1, p2, screen)
-            if not enemies_alive:
-                wave_nr += 1
-        #WIN
-        elif wave_nr == 4 and not p1.enemies and not p2.enemies:
-            Game_over = 1
+        if show_wave_text:
+            wave_text_time = pygame.time.get_ticks() - wave_text_start
+            draw_wave_text(screen, wave_nr, wave_text_time)
+            if wave_text_time >= 2400:
+                show_wave_text = False
+        else:
+            #Load enemies for wave 1, 2, 3
+            if not p1.enemies and not p2.enemies:
+                load_enemies(wave_nr,p1,p2,screen)
+            #Verify if any wave finished to move to the next one
+            if wave_nr < 4:
+                enemies_alive = check_for_enemies(p1, p2, screen)
+                if not enemies_alive:
+                    wave_nr += 1
+                    if wave_nr != 4:
+                        show_wave_text = True
+                        wave_text_start = pygame.time.get_ticks()
+            #WIN
+            elif wave_nr == 4 and not p1.enemies and not p2.enemies:
+                Game_over = 1
         
         #LOSE
         if p1.HP <= 0 or p2.HP <= 0:
@@ -157,21 +167,9 @@ while True:
         screen.blit(HP2_Icon, (1280 - 35, 685))
         screen.blit(HP2_Text, HP2_Text_rect)
 
-        #display box for time
-        timer_height = 50
-        timer_weight = 100
-        timer_surface = pygame.Surface((timer_weight, timer_height), pygame.SRCALPHA)
-        timer_surface.fill((200, 200, 200, 170))
-        screen.blit(timer_surface, (1280-timer_weight-20, 20))
-        #display time
-        elapsed_seconds = (pygame.time.get_ticks() - start_time)//1000
-        minutes = elapsed_seconds // 60
-        seconds = elapsed_seconds % 60
-        time_text = f"{minutes:02}:{seconds:02}"
-        time_render = get_font(16).render(time_text, True, "#5240b6")
-        text_rect = time_render.get_rect(center=(1280 - timer_weight + 32, timer_height-2))
-        screen.blit(time_render, text_rect)
-
+        #display game time
+        display_timer(screen, start_time)
+        
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
 
