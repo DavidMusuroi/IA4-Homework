@@ -1,6 +1,6 @@
 import pygame, sys
-from menu import display_main_menu
-from end_game import display_end_screen
+from menu import display_main_menu, display_records
+from end_game import display_end_screen, display_stats
 from timer import display_timer
 from get_font import get_font
 from force_field import force_field
@@ -16,11 +16,21 @@ clock = pygame.time.Clock()
 
 #App loop
 while True:
-    menu_is_over = False
+    menu_is_over = 0
     #Menu loop
-    while menu_is_over == False:
+    while menu_is_over != 1:
         mouse_pos = pygame.mouse.get_pos()
-        menu_is_over = display_main_menu(screen, mouse_pos)
+        if menu_is_over == 0:
+            menu_is_over = display_main_menu(screen, mouse_pos)
+        else:
+            records_is_over = False
+            #Records loop
+            while records_is_over == False:
+                mouse_pos = pygame.mouse.get_pos()
+                records_is_over = display_records(screen, mouse_pos)
+                clock.tick(60) #limit FPS to 60
+                pygame.display.update()
+            menu_is_over = 0
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
 
@@ -173,10 +183,20 @@ while True:
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
 
-    end_screen_is_over = False
+    end_screen_is_over = 0
     #End screen loop
-    while end_screen_is_over == False:
+    while end_screen_is_over != 1:
         mouse_pos = pygame.mouse.get_pos()
-        end_screen_is_over = display_end_screen(screen, mouse_pos, Game_over)
+        if end_screen_is_over == 0:
+            end_screen_is_over = display_end_screen(screen, mouse_pos, Game_over)
+        else:
+            stats_is_over = 0
+            #Stats loop
+            while stats_is_over != 1:
+                mouse_pos = pygame.mouse.get_pos()
+                stats_is_over = display_stats(screen, mouse_pos, Game_over)
+                clock.tick(60) #limit FPS to 60
+                pygame.display.update()
+            end_screen_is_over = 0
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
