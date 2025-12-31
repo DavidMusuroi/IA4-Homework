@@ -18,11 +18,11 @@ def display_main_menu(screen, mouse_pos):
         menu_start_text = get_font(60).render("START", True, "#BA55D3")
     screen.blit(menu_start_text, menu_start_rect)
     #records text
-    menu_stats_text = get_font(60).render("RECORDS", True, "#5240b6")
-    menu_stats_rect = menu_stats_text.get_rect(center = (640, 500))
-    if(menu_stats_rect.collidepoint(mouse_pos)):
-        menu_stats_text = get_font(60).render("RECORDS", True, "#BA55D3")
-    screen.blit(menu_stats_text, menu_stats_rect)
+    menu_records_text = get_font(60).render("RECORDS", True, "#5240b6")
+    menu_records_rect = menu_records_text.get_rect(center = (640, 500))
+    if(menu_records_rect.collidepoint(mouse_pos)):
+        menu_records_text = get_font(60).render("RECORDS", True, "#BA55D3")
+    screen.blit(menu_records_text, menu_records_rect)
     #exit text
     menu_exit_text = get_font(60).render("EXIT", True, "#5240b6")
     menu_exit_rect = menu_exit_text.get_rect(center = (640, 600))
@@ -39,7 +39,7 @@ def display_main_menu(screen, mouse_pos):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if(menu_start_rect.collidepoint(mouse_pos)):  #start button pressed
                 return 1
-            if(menu_stats_rect.collidepoint(mouse_pos)):  #records button pressed
+            if(menu_records_rect.collidepoint(mouse_pos)):  #records button pressed
                 return 2
             if(menu_exit_rect.collidepoint(mouse_pos)):  #exit button pressed
                 pygame.quit()
@@ -60,6 +60,52 @@ def display_records(screen, mouse_pos):
     if(back_rect.collidepoint(mouse_pos)):
         back_text = get_font(60).render("BACK", True, "#BA55D3")
     screen.blit(back_text, back_rect)
+    #general
+    _text = get_font(35).render("General ", True, "#FFFFFF")
+    screen.blit(_text, (190, 270))
+    #total play time
+    total_play_time_text = get_font(20).render("Total play time: ", True, "#BA55D3")
+    screen.blit(total_play_time_text, (170, 330))
+    #total games
+    _text = get_font(20).render("Total games: ", True, "#BA55D3")
+    screen.blit(_text, (170, 360))
+    #win rate
+    _text = get_font(20).render("Win rate: ", True, "#BA55D3")
+    screen.blit(_text, (170, 390))
+    #Total Enemies Destroyed
+    _text = get_font(20).render("Total enemies destroyed: ", True, "#BA55D3")
+    screen.blit(_text, (170, 420))
+    #Bosses Defeated
+    _text = get_font(20).render("Bosses Defeated: ", True, "#BA55D3")
+    screen.blit(_text, (170, 450))
+    #Shots Hit
+    _text = get_font(20).render("Shots Hit: ", True, "#BA55D3")
+    screen.blit(_text, (170, 480))
+    #Average Accuracy
+    _text = get_font(20).render("Average Accuracy: ", True, "#BA55D3")
+    screen.blit(_text, (170, 510))
+
+    #best
+    _text = get_font(35).render("Best game ", True, "#FFFFFF")
+    screen.blit(_text, (780, 270))
+    #play time
+    play_time_text = get_font(20).render("Play time: ", True, "#BA55D3")
+    screen.blit(play_time_text, (760, 330))
+    #enemies destroyed
+    _text = get_font(20).render("Enemies destroyed: ", True, "#BA55D3")
+    screen.blit(_text, (760, 360))
+    #Accuracy
+    _text = get_font(20).render("Accuracy: ", True, "#BA55D3")
+    screen.blit(_text, (760, 390))
+    #Boss Defeated
+    _text = get_font(20).render("Boss Defeated: ", True, "#BA55D3")
+    screen.blit(_text, (760, 420))
+    #...
+    _text = get_font(20).render("... ", True, "#BA55D3")
+    screen.blit(_text, (760, 450))
+    #...
+    _text = get_font(20).render("... ", True, "#BA55D3")
+    screen.blit(_text, (760, 480))
     #verify events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
