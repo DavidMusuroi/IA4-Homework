@@ -6,6 +6,7 @@ from get_font import get_font
 from force_field import force_field
 from character import character
 from bullet import Bullet
+from stats import stats
 from wave import check_for_enemies, load_enemies, draw_wave_text
 
 pygame.init()
@@ -16,6 +17,10 @@ clock = pygame.time.Clock()
 
 #App loop
 while True:
+    #load best stats
+    best_stats = stats()
+    best_stats.load_best_stats()
+    
     menu_is_over = 0
     #Menu loop
     while menu_is_over != 1:
@@ -27,22 +32,25 @@ while True:
             #Records loop
             while records_is_over == False:
                 mouse_pos = pygame.mouse.get_pos()
-                records_is_over = display_records(screen, mouse_pos)
+                records_is_over = display_records(screen, mouse_pos, best_stats)
                 clock.tick(60) #limit FPS to 60
                 pygame.display.update()
             menu_is_over = 0
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
 
+    #game_stats
+    game_stats = stats()
+
     #Force Field
     field = force_field(4, (178, 34, 34), (640, 0, 10, 670))
 
     # P1's ship
-    p1 = character(100, 10, 7, 280, 610, 40, 40)
+    p1 = character(100, 10, 7, 280, 610, 40, 40, game_stats)
     p1.sprites = p1.load_spritesheet('assets/p1/Move.png', 90, (64, 64), 192, 192)
 
     # P2's ship
-    p2 = character(100, 10, 7, 950, 610, 40, 40)
+    p2 = character(100, 10, 7, 950, 610, 40, 40, game_stats)
     p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
 
     # Current wave
@@ -69,7 +77,6 @@ while True:
     while not Game_over:
         img_menu = pygame.image.load('assets/main_menu.png')
         screen.blit(img_menu, (0, 0))
-        field.draw(screen)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -85,22 +92,30 @@ while True:
         else:
             #Load enemies for wave 1, 2, 3
             if not p1.enemies and not p2.enemies:
-                load_enemies(wave_nr,p1,p2,screen)
+                load_enemies(wave_nr,p1,p2,screen, game_stats)
             #Verify if any wave finished to move to the next one
             if wave_nr < 4:
-                enemies_alive = check_for_enemies(p1, p2, screen)
+                enemies_alive = check_for_enemies(p1, p2, screen, game_stats)
                 if not enemies_alive:
                     wave_nr += 1
                     if wave_nr != 4:
                         show_wave_text = True
                         wave_text_start = pygame.time.get_ticks()
+                    #points for clear wave
+                    if wave_nr < 4:
+                        game_stats.points += 200
+                    else:
+                        game_stats.points += 500 #for final boss 
             #WIN
             elif wave_nr == 4 and not p1.enemies and not p2.enemies:
+                game_stats.boss_defeated = 1
+                game_stats.play_time = pygame.time.get_ticks() - start_time
                 Game_over = 1
         
         #LOSE
-        if p1.HP <= 0 or p2.HP <= 0:
+        if ((p1.HP <= 0 or p2.HP <= 0) and wave_nr < 3) or (p1.HP <= 0 and p2.HP <= 0 and wave_nr == 3):
             Game_over = 2
+            game_stats = start_time - pygame.time.get_ticks()
 
         keys_p1 = pygame.key.get_pressed()
         keys_p2 = pygame.key.get_pressed()
@@ -149,11 +164,13 @@ while True:
         p1.update_bullets(screen)
         p2.update_bullets(screen)
 
-        #colision with the field
-        if p1.rect.colliderect(field.rect):
-            p1.lose_health_by_field(field.damage)
-        if p2.rect.colliderect(field.rect):
-            p2.lose_health_by_field(field.damage)
+        if wave_nr < 3:
+            field.draw(screen)
+            #colision with the field
+            if p1.rect.colliderect(field.rect):
+                p1.lose_health_by_field(field.damage)
+            if p2.rect.colliderect(field.rect):
+                p2.lose_health_by_field(field.damage)
         
         #display info bar  
         HUD_HEIGHT = 50
@@ -183,6 +200,21 @@ while True:
         clock.tick(60) #limit FPS to 60
         pygame.display.update()
 
+    #compare to best game
+    if game_stats.points > best_stats.points:
+        best_stats.copy_from(game_stats)
+    else:
+        if game_stats.points == best_stats.points:
+            if game_stats.play_time < best_stats.play_time:
+                best_stats.copy_from(game_stats)
+            else:
+                if game_stats.play_time == best_stats.play_time:
+                    if best_stats.shots == 0:
+                        best_stats.copy_from(game_stats)
+                    elif game_stats.shots_hit/game_stats.shots*100 > best_stats.shots_hit/best_stats.shot*100:
+                        best_stats.copy_from(game_stats)
+    best_stats.save_best()
+
     end_screen_is_over = 0
     #End screen loop
     while end_screen_is_over != 1:
@@ -194,7 +226,7 @@ while True:
             #Stats loop
             while stats_is_over != 1:
                 mouse_pos = pygame.mouse.get_pos()
-                stats_is_over = display_stats(screen, mouse_pos, Game_over)
+                stats_is_over = display_stats(screen, mouse_pos, Game_over, game_stats)
                 clock.tick(60) #limit FPS to 60
                 pygame.display.update()
             end_screen_is_over = 0

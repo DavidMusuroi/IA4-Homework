@@ -48,7 +48,7 @@ def display_end_screen(screen, mouse_pos, Game_over):
                 sys.exit()
     return 0
 
-def display_stats(screen, mouse_pos, Game_over):
+def display_stats(screen, mouse_pos, Game_over, game_stats):
     #backround image
     img_menu = pygame.image.load('assets/main_menu.png')
     screen.blit(img_menu, (0, 0))
@@ -57,23 +57,51 @@ def display_stats(screen, mouse_pos, Game_over):
     menu_title_rect = menu_title_text.get_rect(center = (640, 150))
     screen.blit(menu_title_text, menu_title_rect)
     #Points
-    _text = get_font(30).render("Points:", True, "#BA55D3")
+    _text = get_font(30).render("Points: ", True, "#BA55D3")
     screen.blit(_text, (300, 315))
+    text = f"{game_stats.points}"
+    text = get_font(30).render(text, True, "#FFFFFF")
+    screen.blit(text, (890, 315))
     #play time
     play_time_text = get_font(30).render("Play time: ", True, "#BA55D3")
     screen.blit(play_time_text, (300, 360))
+    
+    total_seconds = game_stats.play_time // 1000
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    
+    if hours > 0:
+        text = f"{hours:02}:{minutes:02}:{seconds:02}"
+    else:
+        text = f"{minutes:02}:{seconds:02}"
+    
+    text = get_font(30).render(text, True, "#FFFFFF")
+    screen.blit(text, (890, 360))
     #enemies destroyed
     _text = get_font(30).render("Enemies destroyed: ", True, "#BA55D3")
     screen.blit(_text, (300, 405))
+    text = f"{game_stats.enemies_destroyed}"
+    text = get_font(30).render(text, True, "#FFFFFF")
+    screen.blit(text, (890, 405))
     #Boss Defeated
     _text = get_font(30).render("Boss Defeated: ", True, "#BA55D3")
     screen.blit(_text, (300, 450))
+    text = f"{game_stats.boss_defeated}"
+    text = get_font(30).render(text, True, "#FFFFFF")
+    screen.blit(text, (890, 450))
     #Shots hit
     _text = get_font(30).render("Shots Hit: ", True, "#BA55D3")
     screen.blit(_text, (300, 495))
+    text = f"{game_stats.shots_hit}"
+    text = get_font(30).render(text, True, "#FFFFFF")
+    screen.blit(text, (890, 495))
     #Accuracy
     _text = get_font(30).render("Accuracy: ", True, "#BA55D3")
     screen.blit(_text, (300, 540))
+    text = f"{game_stats.shots_hit/game_stats.shots*100:.2f}"
+    text = get_font(30).render(text, True, "#FFFFFF")
+    screen.blit(text, (890, 540))
     #back text
     back_text = get_font(60).render("BACK", True, "#5240b6")
     back_rect = back_text.get_rect(center = (1050, 630))

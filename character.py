@@ -3,7 +3,7 @@ import time
 from bullet import Bullet
 
 class character:
-    def __init__(self, HP, damage, velocity, x, y, width, height):
+    def __init__(self, HP, damage, velocity, x, y, width, height, game_stats):
         self.HP = HP
         self.damage = damage
         self.velocity = velocity
@@ -17,6 +17,7 @@ class character:
         self.bullets = [] #bullet list
         self.shoot_cooldown = 0
         self.enemies = [] #list of enemies
+        self.game_stats = game_stats
 
     def load_spritesheet(self, filename, rot_angle, scale, width, height):
         spritesheet = pygame.image.load(filename)
@@ -45,6 +46,7 @@ class character:
             self.bullets.append(
                 Bullet(self.x + self.width//2 + 10, self.y, -14, self.damage, color)
             )
+            self.game_stats.shots += 1
             self.shoot_cooldown = 15
     
     def update_bullets(self, screen):
@@ -64,4 +66,6 @@ class character:
                 if bullet.rect.colliderect(enemy.rect):
                     enemy.lose_health(bullet.damage)
                     self.bullets.remove(bullet)
+                    self.game_stats.shots_hit += 1
+                    self.game_stats.points += 5
                     break

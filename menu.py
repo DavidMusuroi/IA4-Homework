@@ -46,7 +46,7 @@ def display_main_menu(screen, mouse_pos):
                 sys.exit()
     return 0
 
-def display_records(screen, mouse_pos):
+def display_records(screen, mouse_pos, best_stats):
     #backround image
     img_menu = pygame.image.load('assets/main_menu.png')
     screen.blit(img_menu, (0, 0))
@@ -94,21 +94,52 @@ def display_records(screen, mouse_pos):
     #Points
     _text = get_font(20).render("Points:", True, "#BA55D3")
     screen.blit(_text, (770, 330))
+    text = f"{best_stats.points}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (1150, 330))
     #play time
     play_time_text = get_font(20).render("Play time: ", True, "#BA55D3")
     screen.blit(play_time_text, (770, 360))
+
+    total_seconds = best_stats.play_time // 1000
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    
+    if hours > 0:
+        text = f"{hours:02}:{minutes:02}:{seconds:02}"
+    else:
+        text = f"{minutes:02}:{seconds:02}"
+    
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (1150, 360))
     #enemies destroyed
     _text = get_font(20).render("Enemies destroyed: ", True, "#BA55D3")
     screen.blit(_text, (770, 390))
+    text = f"{best_stats.enemies_destroyed}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (1150, 390))
     #Boss Defeated
     _text = get_font(20).render("Boss Defeated: ", True, "#BA55D3")
     screen.blit(_text, (770, 420))
+    text = f"{best_stats.boss_defeated}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (1150, 420))
     #Shots hit
     _text = get_font(20).render("Shots Hit: ", True, "#BA55D3")
     screen.blit(_text, (770, 450))
+    text = f"{best_stats.shots_hit}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (1150, 450))
     #Accuracy
     _text = get_font(20).render("Accuracy: ", True, "#BA55D3")
     screen.blit(_text, (770, 480))
+    if best_stats.shots != 0:
+        text = f"{best_stats.shots_hit/best_stats.shots*100:.2f}"
+    else:
+        text = "0"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (1150, 480))
     #verify events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
