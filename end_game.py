@@ -56,6 +56,24 @@ def display_stats(screen, mouse_pos, Game_over):
     menu_title_text = get_font(120).render("GAME STATS", True, "#5240b6")
     menu_title_rect = menu_title_text.get_rect(center = (640, 150))
     screen.blit(menu_title_text, menu_title_rect)
+    #Points
+    _text = get_font(30).render("Points:", True, "#BA55D3")
+    screen.blit(_text, (300, 315))
+    #play time
+    play_time_text = get_font(30).render("Play time: ", True, "#BA55D3")
+    screen.blit(play_time_text, (300, 360))
+    #enemies destroyed
+    _text = get_font(30).render("Enemies destroyed: ", True, "#BA55D3")
+    screen.blit(_text, (300, 405))
+    #Boss Defeated
+    _text = get_font(30).render("Boss Defeated: ", True, "#BA55D3")
+    screen.blit(_text, (300, 450))
+    #Shots hit
+    _text = get_font(30).render("Shots Hit: ", True, "#BA55D3")
+    screen.blit(_text, (300, 495))
+    #Accuracy
+    _text = get_font(30).render("Accuracy: ", True, "#BA55D3")
+    screen.blit(_text, (300, 540))
     #back text
     back_text = get_font(60).render("BACK", True, "#5240b6")
     back_rect = back_text.get_rect(center = (1050, 630))

@@ -62,50 +62,53 @@ def display_records(screen, mouse_pos):
     screen.blit(back_text, back_rect)
     #general
     _text = get_font(35).render("General ", True, "#FFFFFF")
-    screen.blit(_text, (190, 270))
+    screen.blit(_text, (180, 270))
+    #Total Points
+    _text = get_font(20).render("Total Points:", True, "#BA55D3")
+    screen.blit(_text, (160, 330))
     #total play time
     total_play_time_text = get_font(20).render("Total play time: ", True, "#BA55D3")
-    screen.blit(total_play_time_text, (170, 330))
+    screen.blit(total_play_time_text, (160, 360))
     #total games
     _text = get_font(20).render("Total games: ", True, "#BA55D3")
-    screen.blit(_text, (170, 360))
+    screen.blit(_text, (160, 390))
     #win rate
     _text = get_font(20).render("Win rate: ", True, "#BA55D3")
-    screen.blit(_text, (170, 390))
+    screen.blit(_text, (160, 420))
     #Total Enemies Destroyed
     _text = get_font(20).render("Total enemies destroyed: ", True, "#BA55D3")
-    screen.blit(_text, (170, 420))
+    screen.blit(_text, (160, 450))
     #Bosses Defeated
     _text = get_font(20).render("Bosses Defeated: ", True, "#BA55D3")
-    screen.blit(_text, (170, 450))
+    screen.blit(_text, (160, 480))
     #Shots Hit
     _text = get_font(20).render("Shots Hit: ", True, "#BA55D3")
-    screen.blit(_text, (170, 480))
+    screen.blit(_text, (160, 510))
     #Average Accuracy
     _text = get_font(20).render("Average Accuracy: ", True, "#BA55D3")
-    screen.blit(_text, (170, 510))
+    screen.blit(_text, (160, 540))
 
     #best
     _text = get_font(35).render("Best game ", True, "#FFFFFF")
-    screen.blit(_text, (780, 270))
+    screen.blit(_text, (790, 270))
+    #Points
+    _text = get_font(20).render("Points:", True, "#BA55D3")
+    screen.blit(_text, (770, 330))
     #play time
     play_time_text = get_font(20).render("Play time: ", True, "#BA55D3")
-    screen.blit(play_time_text, (760, 330))
+    screen.blit(play_time_text, (770, 360))
     #enemies destroyed
     _text = get_font(20).render("Enemies destroyed: ", True, "#BA55D3")
-    screen.blit(_text, (760, 360))
-    #Accuracy
-    _text = get_font(20).render("Accuracy: ", True, "#BA55D3")
-    screen.blit(_text, (760, 390))
+    screen.blit(_text, (770, 390))
     #Boss Defeated
     _text = get_font(20).render("Boss Defeated: ", True, "#BA55D3")
-    screen.blit(_text, (760, 420))
-    #...
-    _text = get_font(20).render("... ", True, "#BA55D3")
-    screen.blit(_text, (760, 450))
-    #...
-    _text = get_font(20).render("... ", True, "#BA55D3")
-    screen.blit(_text, (760, 480))
+    screen.blit(_text, (770, 420))
+    #Shots hit
+    _text = get_font(20).render("Shots Hit: ", True, "#BA55D3")
+    screen.blit(_text, (770, 450))
+    #Accuracy
+    _text = get_font(20).render("Accuracy: ", True, "#BA55D3")
+    screen.blit(_text, (770, 480))
     #verify events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
