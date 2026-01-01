@@ -46,7 +46,7 @@ def display_main_menu(screen, mouse_pos):
                 sys.exit()
     return 0
 
-def display_records(screen, mouse_pos, best_stats):
+def display_records(screen, mouse_pos, best_stats, record_stats):
     #backround image
     img_menu = pygame.image.load('assets/main_menu.png')
     screen.blit(img_menu, (0, 0))
@@ -62,31 +62,70 @@ def display_records(screen, mouse_pos, best_stats):
     screen.blit(back_text, back_rect)
     #general
     _text = get_font(35).render("General ", True, "#FFFFFF")
-    screen.blit(_text, (180, 270))
+    screen.blit(_text, (160, 270))
     #Total Points
     _text = get_font(20).render("Total Points:", True, "#BA55D3")
-    screen.blit(_text, (160, 330))
+    screen.blit(_text, (140, 330))
+    text = f"{record_stats.total_points}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 330))
     #total play time
     total_play_time_text = get_font(20).render("Total play time: ", True, "#BA55D3")
     screen.blit(total_play_time_text, (160, 360))
+    total_seconds = record_stats.total_play_time // 1000
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = total_seconds % 60
+    
+    if hours > 0:
+        text = f"{hours:02}:{minutes:02}:{seconds:02}"
+    else:
+        text = f"{minutes:02}:{seconds:02}"
+    
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 360))
     #total games
     _text = get_font(20).render("Total games: ", True, "#BA55D3")
-    screen.blit(_text, (160, 390))
+    screen.blit(_text, (140, 390))
+    text = f"{record_stats.total_games}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 390))
     #win rate
     _text = get_font(20).render("Win rate: ", True, "#BA55D3")
-    screen.blit(_text, (160, 420))
+    screen.blit(_text, (140, 420))
+    if record_stats.total_games != 0:
+        text = f"{record_stats.total_win_games/record_stats.total_games*100:.2f}"
+    else:
+        text = "0"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 420))
     #Total Enemies Destroyed
     _text = get_font(20).render("Total enemies destroyed: ", True, "#BA55D3")
-    screen.blit(_text, (160, 450))
+    screen.blit(_text, (140, 450))
+    text = f"{record_stats.total_enemies_destroyed}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 450))
     #Bosses Defeated
     _text = get_font(20).render("Bosses Defeated: ", True, "#BA55D3")
-    screen.blit(_text, (160, 480))
+    screen.blit(_text, (140, 480))
+    text = f"{record_stats.total_boss_defeated}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 480))
     #Shots Hit
     _text = get_font(20).render("Shots Hit: ", True, "#BA55D3")
-    screen.blit(_text, (160, 510))
+    screen.blit(_text, (140, 510))
+    text = f"{record_stats.total_shots_hit}"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 510))
     #Average Accuracy
     _text = get_font(20).render("Average Accuracy: ", True, "#BA55D3")
-    screen.blit(_text, (160, 540))
+    screen.blit(_text, (140, 540))
+    if record_stats.total_shots != 0:
+        text = f"{record_stats.total_shots_hit/record_stats.total_shots*100:.2f}"
+    else:
+        text = "0"
+    text = get_font(20).render(text, True, "#FFFFFF")
+    screen.blit(text, (630, 540))
 
     #best
     _text = get_font(35).render("Best game ", True, "#FFFFFF")

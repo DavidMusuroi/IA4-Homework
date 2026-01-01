@@ -7,6 +7,7 @@ from force_field import force_field
 from character import character
 from bullet import Bullet
 from stats import stats
+from record import record
 from wave import check_for_enemies, load_enemies, draw_wave_text
 
 pygame.init()
@@ -17,6 +18,10 @@ clock = pygame.time.Clock()
 
 #App loop
 while True:
+    #load record
+    record_stats = record()
+    record_stats.load_records()
+
     #load best stats
     best_stats = stats()
     best_stats.load_best_stats()
@@ -32,7 +37,7 @@ while True:
             #Records loop
             while records_is_over == False:
                 mouse_pos = pygame.mouse.get_pos()
-                records_is_over = display_records(screen, mouse_pos, best_stats)
+                records_is_over = display_records(screen, mouse_pos, best_stats, record_stats)
                 clock.tick(60) #limit FPS to 60
                 pygame.display.update()
             menu_is_over = 0
@@ -115,7 +120,7 @@ while True:
         #LOSE
         if ((p1.HP <= 0 or p2.HP <= 0) and wave_nr < 3) or (p1.HP <= 0 and p2.HP <= 0 and wave_nr == 3):
             Game_over = 2
-            game_stats = start_time - pygame.time.get_ticks()
+            game_stats.play_time = start_time - pygame.time.get_ticks()
 
         keys_p1 = pygame.key.get_pressed()
         keys_p2 = pygame.key.get_pressed()
@@ -214,6 +219,10 @@ while True:
                     elif game_stats.shots_hit/game_stats.shots*100 > best_stats.shots_hit/best_stats.shot*100:
                         best_stats.copy_from(game_stats)
     best_stats.save_best()
+
+    #update record
+    record_stats.update(game_stats)
+    record_stats.save_records()
 
     end_screen_is_over = 0
     #End screen loop

@@ -17,7 +17,6 @@ class stats:
             self.shots = int(lines[4])
             self.shots_hit = int(lines[5])
     def save_best(self):
-        print(self.boss_defeated)
         with open("best_stats.txt", "w") as f:
             f.write(f"{self.points}\n")
             f.write(f"{self.play_time}\n")
