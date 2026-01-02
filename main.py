@@ -51,15 +51,15 @@ while True:
     field = force_field(4, (178, 34, 34), (640, 0, 10, 670))
 
     # P1's ship
-    p1 = character(100, 10, 7, 280, 610, 40, 40, game_stats)
+    p1 = character(100, 10, 10, 280, 610, 40, 40, game_stats)
     p1.sprites = p1.load_spritesheet('assets/p1/Move.png', 90, (64, 64), 192, 192)
 
     # P2's ship
-    p2 = character(100, 10, 7, 950, 610, 40, 40, game_stats)
+    p2 = character(100, 10, 10, 950, 610, 40, 40, game_stats)
     p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
 
     # Current wave
-    wave_nr = 2
+    wave_nr = 1
 
     # HP1 Icon
     HP1_Icon = pygame.image.load('assets/p1/HP_Icon.png')
