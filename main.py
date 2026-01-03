@@ -51,11 +51,11 @@ while True:
     field = force_field(4, (178, 34, 34), (640, 0, 10, 670))
 
     # P1's ship
-    p1 = character(100, 10, 10, 280, 610, 40, 40, game_stats)
+    p1 = character(100, 10, 10, 280, 610, 40, 40, 0, game_stats)
     p1.sprites = p1.load_spritesheet('assets/p1/Move.png', 90, (64, 64), 192, 192)
 
     # P2's ship
-    p2 = character(100, 10, 10, 950, 610, 40, 40, game_stats)
+    p2 = character(100, 10, 10, 950, 610, 40, 40, 0, game_stats)
     p2.sprites = p2.load_spritesheet('assets/p2/Move.png', 90, (64, 64), 192, 192)
 
     # Current wave
@@ -134,7 +134,7 @@ while True:
         if keys_p1[pygame.K_s] and p1.y < 650 - p1.height:
             p1.y += p1.velocity
             p1.status = 4
-        if keys_p1[pygame.K_d] and p1.x < 605:
+        if keys_p1[pygame.K_d] and (p1.x < 605 or (p1.x < 1270 - p1.width and wave_nr == 3)):
             p1.x += p1.velocity
             p1.status = 5
         
@@ -142,7 +142,7 @@ while True:
         if keys_p2[pygame.K_UP] and p2.y > 0:
             p2.y -= p2.velocity
             p2.status = 2
-        if keys_p2[pygame.K_LEFT] and p2.x > 615:
+        if keys_p2[pygame.K_LEFT] and (p2.x > 615 or (p2.x > 0 and wave_nr == 3)):
             p2.x -= p1.velocity
             p2.status = 3
         if keys_p2[pygame.K_DOWN] and p2.y < 650 - p2.height:
@@ -168,6 +168,16 @@ while True:
         p2.check_hits()
         p1.update_bullets(screen)
         p2.update_bullets(screen)
+
+        #enemies shoot
+        for enemy in p1.enemies:
+            enemy.ai_shoot((255, 255, 255))
+            enemy.check_hits()
+            enemy.update_bullets(screen)
+        for enemy in p2.enemies:
+            enemy.ai_shoot((255, 255, 255))
+            enemy.check_hits()
+            enemy.update_bullets(screen)
 
         if wave_nr < 3:
             field.draw(screen)
