@@ -1,6 +1,7 @@
 import pygame
 import time
 import math
+import random
 from bullet import Bullet
 
 class character:
@@ -80,15 +81,15 @@ class character:
                     )
                     self.shoot_cooldown = 100
 
-            case 3:
+            case 3: #sniper
                 if self.shoot_cooldown == 0:
                     dx, dy = self.get_dir_to_player(self.enemies[0])
                     self.bullets.append(
-                        Bullet(self.x + self.width//2 + 10, self.y + self.height, 20, self.damage, color, dx, dy, 'assets/laserBullet.png')
+                        Bullet(self.x + self.width//2 + 10, self.y + self.height, 14, self.damage, color, dx, dy, 'assets/laserBullet.png')
                     )
                     self.shoot_cooldown = 250
 
-            case 4:
+            case 4: #TODO
                 if self.shoot_cooldown == 0:
                     self.bullets.append(
                         Bullet(self.x + self.width//2 + 10, self.y + self.height, 10, self.damage, color, 0, 1, None)
@@ -97,10 +98,19 @@ class character:
 
             case 5:   # boss
                 if self.shoot_cooldown == 0:
+                    target = random.choice(self.enemies)
+                    dx, dy = self.get_dir_to_player(target)
                     self.bullets.append(
-                        Bullet(self.x + self.width//2 + 10, self.y + self.height, 10, self.damage, color, 0, 1, None)
+                        Bullet(self.x + self.width//2, self.y + self.height, 4, self.damage, color, dx, dy, "assets/rocket.png", target=target, turn_rate=0.06)
                     )
-                    self.shoot_cooldown = 60
+                    self.shoot_cooldown = 320
+                if self.shoot_cooldown %90 == 0:
+                    target = random.choice(self.enemies)
+                    dx, dy = self.get_dir_to_player(target)
+                    self.bullets.append(
+                        Bullet(self.x + self.width//2, self.y + self.height, 4, self.damage, color, dx, dy, 'assets/laserBullet.png')
+                    )
+
      
     def update_bullets(self, screen):
         if self.shoot_cooldown > 0:
