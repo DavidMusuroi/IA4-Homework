@@ -71,7 +71,7 @@ def display_records(screen, mouse_pos, best_stats, record_stats):
     screen.blit(text, (630, 330))
     #total play time
     total_play_time_text = get_font(20).render("Total play time: ", True, "#BA55D3")
-    screen.blit(total_play_time_text, (160, 360))
+    screen.blit(total_play_time_text, (140, 360))
     total_seconds = record_stats.total_play_time // 1000
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60

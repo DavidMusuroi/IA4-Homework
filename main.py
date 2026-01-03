@@ -1,4 +1,5 @@
 import pygame, sys
+import random
 from menu import display_main_menu, display_records
 from end_game import display_end_screen, display_stats
 from timer import display_timer
@@ -71,6 +72,18 @@ while True:
     HP2_Icon = pygame.transform.scale(HP2_Icon, (32, 32))
     HP2_Font = pygame.font.Font(None, 32)
 
+    # health bonus
+    bonus1 = pygame.image.load('assets/healthbonus.png')
+    bonus1 = pygame.transform.scale(bonus1, (32, 32))
+    
+    bonus1_rect = bonus1.get_rect()
+    bonus1_active = False
+    bonus2 = pygame.image.load('assets/healthbonus.png')
+    bonus2 = pygame.transform.scale(bonus2, (32, 32))
+    
+    bonus2_rect = bonus2.get_rect()
+    bonus2_active = False
+
     # 0 -> game is not over
     # 1 -> win
     # 2 -> lose
@@ -98,6 +111,14 @@ while True:
             #Load enemies for wave 1, 2, 3
             if not p1.enemies and not p2.enemies:
                 load_enemies(wave_nr,p1,p2,screen, game_stats)
+                bonus1_active = True
+                bonus2_active = True
+                x1 = random.randint(100, 600)
+                y1 = random.randint(200, 600)
+                x2 = random.randint(700, 1100)
+                y2 = random.randint(200, 600)
+                bonus1_rect.topleft = (x1, y1)
+                bonus2_rect.topleft = (x2, y2)
             #Verify if any wave finished to move to the next one
             if wave_nr < 4:
                 enemies_alive = check_for_enemies(p1, p2, screen, game_stats)
@@ -118,9 +139,9 @@ while True:
                 Game_over = 1
         
         #LOSE
-        if ((p1.HP <= 0 or p2.HP <= 0) and wave_nr < 3) or (p1.HP <= 0 and p2.HP <= 0 and wave_nr == 3):
+        if p1.HP <= 0 or p2.HP <= 0:
             Game_over = 2
-            game_stats.play_time = start_time - pygame.time.get_ticks()
+            game_stats.play_time = pygame.time.get_ticks() - start_time
 
         keys_p1 = pygame.key.get_pressed()
         keys_p2 = pygame.key.get_pressed()
@@ -128,7 +149,7 @@ while True:
         if keys_p1[pygame.K_w] and p1.y > 0:
             p1.y -= p1.velocity
             p1.status = 2
-        if keys_p1[pygame.K_a] and p1.x > 0:
+        if keys_p1[pygame.K_a] and p1.x > -10:
             p1.x -= p1.velocity
             p1.status = 3
         if keys_p1[pygame.K_s] and p1.y < 650 - p1.height:
@@ -186,7 +207,28 @@ while True:
                 p1.lose_health_by_field(field.damage)
             if p2.rect.colliderect(field.rect):
                 p2.lose_health_by_field(field.damage)
+
+        #Bonus health
+        if bonus1_active:
+            if p1.rect.colliderect(bonus1_rect):
+                p1.HP += 25
+                bonus1_active = False
+            elif p2.rect.colliderect(bonus1_rect):
+                p2.HP += 25
+                bonus1_active = False
+            else:
+                screen.blit(bonus1, bonus1_rect)
         
+        if bonus2_active:
+            if p1.rect.colliderect(bonus2_rect):
+                p1.HP += 25
+                bonus2_active = False
+            elif p2.rect.colliderect(bonus2_rect):
+                p2.HP += 25
+                bonus2_active = False
+            else:
+                screen.blit(bonus2, bonus2_rect)
+
         #display info bar  
         HUD_HEIGHT = 50
         hud_surface = pygame.Surface((1280, HUD_HEIGHT), pygame.SRCALPHA)

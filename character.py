@@ -67,7 +67,7 @@ class character:
             case 1:
                 if self.shoot_cooldown == 0:
                     self.bullets.append(
-                        Bullet(self.x + self.width//2 + 10, self.y + self.height, 10, self.damage, color, 0, 1, None)
+                        Bullet(self.x + self.width//2 + 10, self.y + self.height, 11, self.damage, color, 0, 1, None)
                     )
                     self.shoot_cooldown = 120
 
@@ -92,7 +92,10 @@ class character:
             case 4: #TODO
                 if self.shoot_cooldown == 0:
                     self.bullets.append(
-                        Bullet(self.x + self.width//2 + 10, self.y + self.height, 10, self.damage, color, 0, 1, None)
+                        Bullet(self.x + self.width//2 + 20, self.y + self.height, 8, self.damage, color, 0.1, 1, 'assets/laserBullet.png')
+                    )
+                    self.bullets.append(
+                        Bullet(self.x + self.width//2, self.y + self.height, 8, self.damage, color, -0.1, 1, 'assets/laserBullet.png')
                     )
                     self.shoot_cooldown = 140
 

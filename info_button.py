@@ -39,7 +39,9 @@ def display_info_image(screen, mouse_pos):
         if info_anim > 0.8:
             font = get_font(16)
             screen.blit(font.render("Starfield Assault", True, (220,220,220)), (panel_x+125, panel_y+15))
-            screen.blit(font.render("A small pygame project...", True, (220,220,220)), (panel_x+15, panel_y+50))
+            screen.blit(font.render("A fun pygame project...", True, (220,220,220)), (panel_x+15, panel_y+50))
+            screen.blit(font.render("Co-op and defeat", True, (220,220,220)), (panel_x+15, panel_y+85))
+            screen.blit(font.render("all the enemies!", True, (220,220,220)), (panel_x+205, panel_y+120))
             screen.blit(font.render("Made by:", True, (220,220,220)), (panel_x+15, panel_y+155))
             screen.blit(font.render("Musuroi David & Tanasa Damian", True, (220,220,220)), (panel_x+15, panel_y+190))
     screen.blit(img_info, info_rect)

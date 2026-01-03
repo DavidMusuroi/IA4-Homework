@@ -99,7 +99,10 @@ def display_stats(screen, mouse_pos, Game_over, game_stats):
     #Accuracy
     _text = get_font(30).render("Accuracy: ", True, "#BA55D3")
     screen.blit(_text, (300, 540))
-    text = f"{game_stats.shots_hit/game_stats.shots*100:.2f}"
+    if game_stats.shots != 0:
+        text = f"{game_stats.shots_hit/game_stats.shots*100:.2f}"
+    else:
+        text = "0"
     text = get_font(30).render(text, True, "#FFFFFF")
     screen.blit(text, (890, 540))
     #back text

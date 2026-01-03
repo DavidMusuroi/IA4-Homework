@@ -256,3 +256,4 @@ def draw_wave_text(screen, wave_nr, wave_text_time):
     surf = font.render(text, True, (255, 80, 80))
     rect = surf.get_rect(center=(640, 320))
     screen.blit(surf, rect)
+    
